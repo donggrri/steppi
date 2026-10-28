@@ -1,6 +1,6 @@
 # Slice 1 verification log
 
-Updated: 2026-10-28 21:42 Asia/Seoul (agent VM wrap-up)
+Updated: 2026-10-29 (local env docs); slice verification 2026-10-28 Asia/Seoul
 
 ## Scope delivered
 
@@ -11,7 +11,7 @@ Updated: 2026-10-28 21:42 Asia/Seoul (agent VM wrap-up)
 
 ## Stage A — stock Pi CLI (TC-101)
 
-Recorded **2026-10-28 21:42 Asia/Seoul** on cloud agent VM after `npm run build`:
+Recorded **2026-10-28 21:42 Asia/Seoul** on cloud agent VM after `npm install --ignore-scripts && npm run build`:
 
 | Check | Command | Result |
 | --- | --- | --- |
@@ -55,13 +55,19 @@ Headless CI does not drive the TUI; extension hooks + manual smoke when OAuth/`a
 
 ## Live provider smoke (optional)
 
-Not required for slice 1 CI. Requires OAuth/API keys and (for antigravity) **`agy` on PATH**.
+Not required for slice 1 CI. Use **`PI_CODING_AGENT_DIR=$HOME/.steppi/agent`** so installs and `/login` match the steppi product home (see [PROVIDERS.md](PROVIDERS.md)). Requires OAuth/API keys, **`agy` on PATH** for antigravity, and for Grok **`XAI_API_KEY`** or **`/login xai`** (not **`cursor/*grok*`** models).
+
+Example antigravity print-mode smoke (from repo root after build):
+
+```bash
+PI_CODING_AGENT_DIR=$HOME/.steppi/agent ./pi-test.sh -p "Reply with exactly: OK" --model antigravity/gemini-3-8-flash
+```
 
 | Provider | Status |
 | --- | --- |
 | cursor | Deferred without OAuth in CI |
-| antigravity | Deferred without `agy` + token in CI |
-| grok | Mocked: `auth check --provider grok` → `not_ready` without credentials |
+| antigravity | Deferred without `agy` + token in CI; primary package **`git:github.com/donggrri/pi-antigravity-bridge`** |
+| grok | Mocked: `auth check --provider grok` → `not_ready` without credentials; live uses **`xai/grok-4.*`** / **`grok/*`**, not Cursor-routed **`cursor/*grok*`** |
 
 ## Blockers / follow-ups
 

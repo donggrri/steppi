@@ -14,6 +14,8 @@
 
 **steppi** is a Pi-fork product: stock Pi packages stay usable; slice 1 adds **cursor**, **antigravity**, and **grok** providers plus footer dashboard status in the default TUI (no web UI).
 
+- **Agent home:** set **`PI_CODING_AGENT_DIR=$HOME/.steppi/agent`** (plain Pi stays `~/.pi/agent`); project config remains **`.pi/`** in the working tree.
+- **From source:** `npm install --ignore-scripts && npm run build`, then **`./pi-test.sh`** with that env (see [docs/PROVIDERS.md](docs/PROVIDERS.md)).
 - Upstream baseline: [docs/UPSTREAM.md](docs/UPSTREAM.md)
 - Providers: [docs/PROVIDERS.md](docs/PROVIDERS.md)
 - Slice 1 verification: [docs/SLICE.md](docs/SLICE.md)
