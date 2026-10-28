@@ -57,14 +57,14 @@ jobs:
         run: |
           set -euo pipefail
           release="$(npm view @earendil-works/pi-ai version)"
-          if git rev-parse "v${release}^{tag}" >/dev/null 2>&1; then
-            echo "Release tag v${release} already present."
+          if git rev-parse "v${release}^{commit}" >/dev/null 2>&1; then
+            echo "Release ref v${release} already resolves to a commit."
             exit 0
           fi
           git remote add earendil-pi https://github.com/earendil-works/pi.git 2>/dev/null || \
             git remote set-url earendil-pi https://github.com/earendil-works/pi.git
-          git fetch earendil-pi --tags --no-recurse-submodules
-          git rev-parse "v${release}^{tag}"
+          git fetch earendil-pi "+refs/tags/*:refs/tags/*" --no-recurse-submodules
+          git rev-parse "v${release}^{commit}"
 
       - name: Setup Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
