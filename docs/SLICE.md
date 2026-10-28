@@ -7,7 +7,7 @@ Updated: 2026-10-28 (Asia/Seoul)
 - Upstream [earendil-works/pi](https://github.com/earendil-works/pi) at commit in `docs/UPSTREAM.md`
 - Product docs from prep tarball under `docs/`, `GLOSSARY.md`, `skills-lock.json`, `.atomic-workflow.json`
 - Provider wiring: `.pi/settings.json` + `packages/steppi`
-- Mocked tests: `packages/coding-agent/test/steppi-slice1-providers.test.ts`
+- Mocked tests: `packages/coding-agent/test/steppi-slice1-providers.test.ts` (see [provider-seam.md](provider-seam.md))
 
 ## Commands (record results after run)
 

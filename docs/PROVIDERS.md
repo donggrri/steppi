@@ -2,13 +2,15 @@
 
 Updated: 2026-10-28 (Asia/Seoul)
 
+**Wiring guide:** [PROVIDER_WIRE.md](PROVIDER_WIRE.md) · **Mock tests:** [provider-seam.md](provider-seam.md) · **Package JSON:** [settings.packages.example.json](settings.packages.example.json)
+
 Selection rule for community packages: **highest GitHub stars** among viable Pi extensions that match intent, unless orchestration settles a donggrri fork (see below).
 
 | steppi id | Decision | Package / source | Notes |
 | --- | --- | --- | --- |
-| **cursor** | **Reuse (donggrri)** | [`donggrri/pi-cursor-provider`](https://github.com/donggrri/pi-cursor-provider) | OAuth `/login cursor` + local gRPC proxy. Install: `pi install git:github.com/donggrri/pi-cursor-provider`. Declared in repo `.pi/settings.json`. SPEC “Cursor SDK” is satisfied for slice 1 by this OAuth provider path (orchestration 2026-10-28). |
-| **antigravity** | **Reuse (donggrri bridge)** | [`donggrri/pi-antigravity-bridge`](https://github.com/donggrri/pi-antigravity-bridge) + **`agy` CLI** (headless) | Replaces `npm:pi-antigravity` for this product pass. Install: `pi install git:github.com/donggrri/pi-antigravity-bridge`. Requires `agy` on PATH and Antigravity OAuth under `~/.gemini/antigravity-cli/`. |
-| **grok** | **Reuse (built-in + steppi alias)** | `@earendil-works/pi-ai` provider **`xai`**, product id **`grok`** via `packages/steppi` | `/login grok` or `/login xai` use xAI auth. steppi registers provider id **`grok`** that delegates to xAI transport (see `packages/steppi/extensions/index.ts`). |
+| **cursor** | **Reuse (donggrri)** | [`donggrri/pi-cursor-provider`](https://github.com/donggrri/pi-cursor-provider) | OAuth `/login cursor` + local gRPC proxy. Install: `pi install git:github.com/donggrri/pi-cursor-provider`. |
+| **antigravity** | **Reuse (donggrri bridge)** | [`donggrri/pi-antigravity-bridge`](https://github.com/donggrri/pi-antigravity-bridge) + **`agy` CLI** (headless) | Requires `agy` on PATH. Install: `pi install git:github.com/donggrri/pi-antigravity-bridge`. |
+| **grok** | **Reuse (built-in + steppi extension)** | `@earendil-works/pi-ai` **`xai`**; product id **`grok`** via `packages/steppi` | No `providerAliases` in Pi settings—see [PROVIDER_WIRE.md](PROVIDER_WIRE.md). `/login xai` or `XAI_API_KEY`; extension registers **`grok`** for selection and TUI labeling. |
 
 ## Rejected / not primary (survey)
 
@@ -21,10 +23,10 @@ Selection rule for community packages: **highest GitHub stars** among viable Pi 
 
 ## Wiring in this repo
 
-1. **Project packages** (after trust): copy `.pi/settings.json.example` to `.pi/settings.json` (see `docs/PROVIDERS.md`).
-2. **steppi package** (`packages/steppi`): registers **`grok`** and dashboard footer status (provider + turn/run) via Pi default TUI `setStatus`.
-3. **Project package list**: copy `.pi/settings.json.example` → `.pi/settings.json` (gitignored) after granting project trust, or install packages manually per table above.
-4. **Stock Pi** packages and CLI remain unchanged; no core forks for slice 1.
+1. Copy `.pi/settings.json.example` or [docs/settings.packages.example.json](settings.packages.example.json) → `.pi/settings.json` after project trust (gitignored).
+2. **`packages/steppi`** (local package): registers **`grok`** and dashboard footer status (provider + turn/run) via Pi default TUI `setStatus`.
+3. Git packages **cursor** and **antigravity** load from the `packages` list when install succeeds.
+4. Stock Pi packages and CLI unchanged; no core forks for slice 1.
 
 ## Install / verify (from repo root)
 
@@ -36,8 +38,8 @@ npm run build
 npm run test --workspace=@earendil-works/pi-coding-agent -- steppi-slice1-providers
 ```
 
-Live `/login` + billed turns are optional; record smoke in `docs/SLICE.md`. CI uses mocked provider tests only.
+Live `/login` + billed turns are optional; record smoke in [SLICE.md](SLICE.md). CI uses mocked provider tests only.
 
 ## Intent match vs create
 
-All three providers reuse existing packages or Pi built-in **`xai`**. **No new steppi-owned provider transport package** was required beyond thin **`packages/steppi`** wiring (grok alias + TUI status).
+All three providers reuse existing packages or Pi built-in **`xai`**. **No new steppi-owned provider transport package** beyond thin **`packages/steppi`** (grok alias + TUI status).
