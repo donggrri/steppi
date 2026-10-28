@@ -34,12 +34,15 @@ Covers: grok product id registration, cursor/antigravity routing when registered
 
 ## Stage C — CI (PR #2)
 
-| Workflow | Notes |
-| --- | --- |
-| **CI** | `build-check` + `test (coding-agent|durable|other)` — required for slice 1 |
-| **Publish Model Catalog** | Failed on fork without tag `v1.4.0`; fixed by fetching release tags from `earendil-works/pi` in `.github/workflows/publish-model-catalog.yml` before `check:model-catalog-compat` |
+Recorded **2026-10-28 21:52 Asia/Seoul** after push `399057224`:
 
-Re-check Actions on [PR #2](https://github.com/donggrri/steppi/pull/2) after push; Grok Bot merges when green.
+| Workflow | Result |
+| --- | --- |
+| **CI** (`build-check`, `test` coding-agent/durable/other, `mcp-conformance`) | **SUCCESS** |
+| **Publish Model Catalog / generate** | **SUCCESS** (after fetching lightweight release tags from `earendil-works/pi` in workflow) |
+| **Publish Model Catalog / publish** | Skipped on PR (expected) |
+
+Fix: `.github/workflows/publish-model-catalog.yml` force-fetches upstream tags and validates `vX.Y.Z^{commit}` (upstream uses lightweight release tags).
 
 ## Stage D — dashboard TUI (FR-114/115, manual)
 
