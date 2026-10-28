@@ -1,0 +1,7 @@
+{
+	"packages": [
+		"./packages/steppi",
+		"git:github.com/donggrri/pi-cursor-provider",
+		"git:github.com/donggrri/pi-antigravity-bridge"
+	]
+}

@@ -1,0 +1,15 @@
+{
+  "installedHarnesses": [
+    "agy",
+    "cursor",
+    "pi"
+  ],
+  "agy": {
+    "plan": "sdk",
+    "implement": "ask",
+    "review": "ask"
+  },
+  "testDone": "npm test",
+  "profile": "atomic",
+  "docsRoot": "work-docs"
+}

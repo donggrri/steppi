@@ -1,0 +1,7 @@
+# Deprecated pointer
+# steppi delivery graph is now Atomic Workflow:
+#   .atomic/graph.yaml
+#   skills: .agents/skills/atomic-*
+# Source: https://github.com/donggrri/atomic-graph-workflow
+#
+# Do not use this file for orchestration.
