@@ -1,0 +1,15 @@
+{
+	"name": "@donggrri/steppi",
+	"version": "0.1.0",
+	"private": true,
+	"type": "module",
+	"description": "steppi slice 1: grok product id, dashboard status, provider wiring docs",
+	"keywords": ["pi-package", "steppi"],
+	"pi": {
+		"extensions": ["./extensions/index.ts"]
+	},
+	"peerDependencies": {
+		"@earendil-works/pi-ai": "*",
+		"@earendil-works/pi-coding-agent": "*"
+	}
+}
