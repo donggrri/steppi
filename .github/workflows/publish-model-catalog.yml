@@ -52,6 +52,20 @@ jobs:
           # The compatibility check reads the latest release's source from its git tag.
           fetch-depth: 0
 
+      # Product forks may not mirror upstream release tags; compat check uses `git archive vX.Y.Z`.
+      - name: Fetch upstream Pi release tags
+        run: |
+          set -euo pipefail
+          release="$(npm view @earendil-works/pi-ai version)"
+          if git rev-parse "v${release}^{tag}" >/dev/null 2>&1; then
+            echo "Release tag v${release} already present."
+            exit 0
+          fi
+          git remote add earendil-pi https://github.com/earendil-works/pi.git 2>/dev/null || \
+            git remote set-url earendil-pi https://github.com/earendil-works/pi.git
+          git fetch earendil-pi --tags --no-recurse-submodules
+          git rev-parse "v${release}^{tag}"
+
       - name: Setup Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
