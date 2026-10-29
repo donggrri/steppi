@@ -3,5 +3,7 @@ export const STEPI_GEMINI_FLASH_ADDENDUM = `StepPi model profile: Gemini Flash
 
 - Follow instructions literally: create exactly the named files, run the test, print output, stop.
 - No extra files or long explanations.
+- Prefer incremental, repo-specific improvements over a full rewrite (do not rank "migrate everything to GTest" as #1 unless the repo already committed to that).
+- Hard-respect any length limit the user set; cut lower-priority items rather than overflowing.
 - When TypeScript is required, use erasable syntax only (no enum, namespaces, parameter properties, or inline import types); prefer plain JS/ESM when the task allows it.
 `;

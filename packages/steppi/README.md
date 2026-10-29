@@ -23,6 +23,8 @@ Provider wiring and auth: repo root [docs/PROVIDER_WIRE.md](../../docs/PROVIDER_
 
 For antigravity headless runs, ensure **`agy`** is on `PATH` or set **`AGY_BINARY`** (e.g. `$HOME/.local/bin/agy`).
 
+Headless **`cursor/*`** may report tools unavailable even when **`--tools`** is set; treat a **`TOOLS_UNAVAILABLE`** reply as a hard fail for analysis runs.
+
 ## Tests
 
 Profile resolution and prompt injection are covered in `packages/coding-agent/test/steppi-slice1-providers.test.ts` and `steppi-model-prompt-profiles.test.ts` (no live API).
