@@ -42,6 +42,20 @@ Pi **does not** define a `providerAliases` key in `settings.schema.json`. steppi
 - Prefer **`/login xai`** or **`XAI_API_KEY`** per upstream docs; **`/login grok`** uses the same xAI auth stack under the grok provider id.
 - **Do not confuse with Cursor:** model ids like **`cursor/*grok*`** are Cursor-routed models from **`pi-cursor-provider`**, not steppi **grok** / **xai**. Live Grok smoke requires **`XAI_API_KEY`** or **`/login xai`**, and a **`grok/*`** or **`xai/grok-*`** model—not **`cursor/*grok*`**.
 
+- **Do not confuse with Cursor:** model ids like **`cursor/*grok*`** are Cursor-routed models from **`pi-cursor-provider`**, not steppi **grok** / **xai**. Live Grok smoke requires **`XAI_API_KEY`** or **`/login xai`**, and a **`grok/*`** or **`xai/grok-*`** model—not **`cursor/*grok*`.
+
+## Per-model system prompt profiles
+
+With **`packages/steppi`** loaded, the extension appends a short **`steppi_model_guidance`** section on each agent run based on the selected model (neutral fallback when unmatched). Footer status shows **`grok`**, **`composer`**, or **`flash`** when a profile is active.
+
+| Profile | Match |
+| --- | --- |
+| Grok | `grok/*`, `xai/*`; `cursor/*` ids containing `grok` |
+| Composer | `cursor/composer-2`, `cursor/composer-2.5`, other `composer-2*` cursor ids |
+| Flash | `antigravity/*` ids containing both `gemini` and `flash` |
+
+Edit addendum text under **`packages/steppi/prompts/`**; mapping logic in **`packages/steppi/model-prompt-profile.ts`**. See **`packages/steppi/README.md`**.
+
 ## Error naming (SPEC)
 
 Slice 1 requires errors to **name the provider** (`cursor`, `antigravity`, `grok`) and the missing piece (auth, binary, model)—not a separate rigid code enum. When surfacing failures:
