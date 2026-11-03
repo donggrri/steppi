@@ -3,7 +3,7 @@
 	"version": "0.1.0",
 	"private": true,
 	"type": "module",
-	"description": "steppi slice 1: grok product id, dashboard status, provider wiring docs",
+	"description": "steppi: grok product id, per-model prompt profiles, dashboard status",
 	"keywords": ["pi-package", "steppi"],
 	"pi": {
 		"extensions": ["./extensions/index.ts"]

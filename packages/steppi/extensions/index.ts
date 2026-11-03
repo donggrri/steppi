@@ -1,6 +1,13 @@
 import type { Model, Provider } from "@earendil-works/pi-ai";
 import { xaiProvider } from "@earendil-works/pi-ai/providers/xai";
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
+import {
+	modelPromptProfileAddendum,
+	modelPromptProfileStatusLabel,
+	resolveModelPromptProfile,
+	STEPI_MODEL_GUIDANCE_SECTION,
+	type ModelPromptProfile,
+} from "../model-prompt-profile.ts";
 
 type XaiApi = ReturnType<typeof xaiProvider> extends Provider<infer T> ? T : never;
 type XaiModel = Model<XaiApi>;
@@ -33,6 +40,31 @@ export function grokProvider(): Provider<XaiApi> {
 	};
 }
 
+function applyModelPromptProfileToOptions(
+	provider: string | undefined,
+	modelId: string | undefined,
+	sections: Record<string, string>,
+): ModelPromptProfile {
+	if (!provider || !modelId) {
+		delete sections[STEPI_MODEL_GUIDANCE_SECTION];
+		return "neutral";
+	}
+	const profile = resolveModelPromptProfile(provider, modelId);
+	const addendum = modelPromptProfileAddendum(profile);
+	if (addendum) {
+		sections[STEPI_MODEL_GUIDANCE_SECTION] = addendum;
+	} else {
+		delete sections[STEPI_MODEL_GUIDANCE_SECTION];
+	}
+	return profile;
+}
+
+function registerSteppiModelPromptProfiles(pi: ExtensionAPI): void {
+	pi.on("before_agent_start", async (event, ctx) => {
+		applyModelPromptProfileToOptions(ctx.model?.provider, ctx.model?.id, event.systemPromptOptions.sections);
+	});
+}
+
 function registerSteppiDashboardStatus(pi: ExtensionAPI): void {
 	const displayProvider = (providerId: string) => (providerId === "xai" ? "grok" : providerId);
 
@@ -42,9 +74,12 @@ function registerSteppiDashboardStatus(pi: ExtensionAPI): void {
 	const refresh = (ctx: ExtensionContext) => {
 		const theme = ctx.ui.theme;
 		const provider = displayProvider(ctx.model?.provider ?? "none");
+		const profile = resolveModelPromptProfile(ctx.model?.provider ?? "", ctx.model?.id ?? "");
+		const profileLabel = modelPromptProfileStatusLabel(profile);
+		const profileSuffix = profileLabel ? theme.fg("dim", ` · ${profileLabel}`) : "";
 		const run = runState === "running" ? theme.fg("accent", "running") : theme.fg("success", "idle");
 		const turnLabel = turn > 0 ? theme.fg("dim", ` turn ${turn}`) : theme.fg("dim", " ready");
-		ctx.ui.setStatus("steppi", `${run} · ${provider}${turnLabel}`);
+		ctx.ui.setStatus("steppi", `${run} · ${provider}${profileSuffix}${turnLabel}`);
 	};
 
 	pi.on("model_select", async (_event, ctx) => {
@@ -79,14 +114,24 @@ function registerSteppiDashboardStatus(pi: ExtensionAPI): void {
 	});
 }
 
-/** steppi slice 1 extension entry: grok product id + dashboard footer status. */
+/** steppi extension: grok product id, per-model prompt profiles, dashboard footer status. */
 export default function (pi: ExtensionAPI) {
 	pi.registerProvider(grokProvider());
+	registerSteppiModelPromptProfiles(pi);
 	registerSteppiDashboardStatus(pi);
 }
 
 /** Exported for tests that load the factory without default export resolution. */
 export function steppiExtension(pi: ExtensionAPI) {
 	pi.registerProvider(grokProvider());
+	registerSteppiModelPromptProfiles(pi);
 	registerSteppiDashboardStatus(pi);
 }
+
+export {
+	modelPromptProfileAddendum,
+	modelPromptProfileStatusLabel,
+	resolveModelPromptProfile,
+	STEPI_MODEL_GUIDANCE_SECTION,
+	type ModelPromptProfile,
+} from "../model-prompt-profile.ts";
